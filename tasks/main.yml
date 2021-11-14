@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-kafka
+
+- name: System tuning
+  ansible.builtin.include_tasks: systemTuning.yml
+
+- name: Install Apache Kafka
+  ansible.builtin.include_tasks: installKafka.yml 
+
+- name: Install JMX Exporter
+  ansible.builtin.include_tasks: installJmxExporter.yml

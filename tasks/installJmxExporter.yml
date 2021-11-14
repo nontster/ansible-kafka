@@ -1,0 +1,41 @@
+---
+- name: Create directory for jmx exporter
+  file:
+    path: '{{ jmx_exporter_dir }}'
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+    mode: 0755
+  tags:
+    - jmx_exporter
+
+- name: Check if jmx exporter has already been downloaded 
+  stat:
+    path: '{{ jmx_exporter_dir }}/jmx_prometheus_javaagent-{{ jmx_exporter_version }}.jar'
+  register: dir
+  tags:
+    - jmx_exporter
+
+- name: Download jmx exporter
+  get_url:
+    url: "{{ jmx_exporter_download_url }}/{{ jmx_exporter_version }}/jmx_prometheus_javaagent-{{ jmx_exporter_version }}.jar"
+    dest: "{{ jmx_exporter_dir }}"
+  when: not dir.stat.exists
+  tags:
+    - jmx_exporter
+
+
+- name: Check if jmx exporter Kafka config has already been downloaded
+  stat:
+    path: '{{ jmx_exporter_dir }}/kafka-2_0_0.yml'
+  register: exp_dir
+  tags:
+    - jmx_exporter
+
+- name: Download jmx exporter Kafka config
+  get_url:
+    url: "{{ jmx_exporter_kafka_download_url }}/kafka-2_0_0.yml"
+    dest: "{{ jmx_exporter_dir }}"
+  when: not exp_dir.stat.exists
+  tags:
+    - jmx_exporter

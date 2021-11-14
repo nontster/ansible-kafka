@@ -1,0 +1,7 @@
+---
+jmx_exporter_download_url: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent
+jmx_exporter_version: 0.16.1
+jmx_exporter_dir: /opt/jmx_exporter
+jmx_exporter_port: 7071
+jmx_port: 9989
+jmx_exporter_kafka_download_url: https://raw.githubusercontent.com/prometheus/jmx_exporter/master/example_configs
