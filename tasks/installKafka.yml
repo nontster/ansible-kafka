@@ -183,6 +183,16 @@
   tags:
     - kafka_config
 
+- name: Template JAAS configuration file to kafka_server_jaas.conf
+  template:
+    src: kafka_server_jaas.conf.j2
+    dest: '{{ kafka_dir }}/config/kafka_server_jaas.conf'
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+    mode: 0644
+  tags:
+    - kafka_config
+
 - name: Create symlink to kafka server properties file
   file:
     src: '{{ kafka_dir }}/config/server.properties'
@@ -242,6 +252,44 @@
     owner: '{{ kafka_user }}'
   tags:
     - kafka_config
+
+- name: Create symlink to kafka JAAS configuration file
+  file:
+    src: '{{ kafka_dir }}/config/kafka_server_jaas.conf'
+    dest: /etc/kafka/kafka_server_jaas.conf
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  tags:
+    - kafka_config
+
+- name: Create directory for Java keystore and truststore 
+  file:
+    path: /etc/ssl/private
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+    mode: 0644
+  tags:
+    - ssl_dirs
+
+- name: Check that Java keystore file exists
+  become: false
+  local_action: stat path='certificates/kafka.{{ ansible_hostname }}.keystore.jks'
+  register: keystore
+
+- name: copy Java keystore file if exists
+  copy: src='certificates/kafka.{{ ansible_hostname }}.keystore.jks' dest=/etc/ssl/private
+  when: keystore.stat.exists
+
+- name: Check that Java truststore file exists
+  become: false
+  local_action: stat path='certificates/kafka.{{ ansible_hostname }}.truststore.jks'
+  register: truststore
+
+- name: copy Java truststore file if exists
+  copy: src='certificates/kafka.{{ ansible_hostname }}.truststore.jks' dest=/etc/ssl/private
+  when: truststore.stat.exists
 
 - name: Template Kafka init.d service file
   template:

@@ -1,0 +1,13 @@
+// Interbroker credentials
+KafkaServer {
+  org.apache.kafka.common.security.scram.ScramLoginModule required
+  username="admin"
+  password="admin-secret";
+};
+
+// Zookeeper connection credentials
+Client {
+  org.apache.zookeeper.server.auth.DigestLoginModule required
+  username="admin"
+  password="admin-secret";
+};

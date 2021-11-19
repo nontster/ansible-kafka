@@ -51,6 +51,27 @@ kafka_listeners:
 #   - "SASL_SSL://:9094"
 #   - "PLAINTEXT://:9092"
 
+# Broker security settings
+ssl_truststore_password: masquerade
+ssl_keystore_password: masquerade
+ssl_key_password: masquerade
+
+# The list of SASL mechanisms enabled in the Kafka server
+sasl_enabled_mechanisms: 
+  - "SCRAM-SHA-256"
+  - "SCRAM-SHA-512"
+
+# Set security inter broker protocol  
+security_inter_broker_protocol: SASL_SSL
+
+# SASL mechanism used for inter-broker connections
+sasl_mechanism_inter_broker_protocol: SCRAM-SHA-256
+
+# Super user list
+super_users:
+  - "User:admin"
+
+
 # The number of threads handling network requests
 kafka_num_network_threads: 3
 # The number of threads that the server uses for processing requests, which may include disk I/O

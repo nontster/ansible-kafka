@@ -66,6 +66,41 @@ advertised.listeners={{ kafka_advertised_listeners | join(",")}}
 # Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
 #listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
 
+# Broker security settings
+ssl.truststore.location=/etc/ssl/private/kafka.{{ ansible_hostname }}.truststore.jks
+ssl.truststore.password={{ ssl_truststore_password }}
+ssl.keystore.location=/etc/ssl/private/kafka.{{ ansible_hostname }}.keystore.jks
+ssl.keystore.password={{ ssl_keystore_password }}
+ssl.key.password={{ ssl_key_password }}
+
+########### SECURITY using SCRAM-SHA-256 and SSL ###################
+
+# The list of SASL mechanisms enabled in the Kafka server
+sasl.enabled.mechanisms={{ sasl_enabled_mechanisms | join(",")}}
+
+# Set security inter broker for SASL through SSL
+security.inter.broker.protocol={{ security_inter_broker_protocol }}
+
+# SASL mechanism used for inter-broker connections. Default value is GSSAPI
+sasl.mechanism.inter.broker.protocol={{ sasl_mechanism_inter_broker_protocol }}
+
+# To enable the broker to authenticate clients (2-way authentication)
+# Clients will need to pass SSL/TLS client authentication which is based on the truststore
+ssl.client.auth=required
+
+# To enable ACLs, you must add the following to server.properties configuration file
+authorizer.class.name=kafka.security.auth.SimpleAclAuthorizer
+
+# By default, if a resource R has no associated ACLs, only the super users are allowed to access R.
+# To change this behavior, you can include the following the server.properties configuration file.
+# allow.everyone.if.no.acl.found=true.
+# Alternatively, yo can also add superusers in server.properties configuration file as super.users=User:root;User:kafka-user.
+super.users={{ super_users | join(",")}}
+
+# Put this line if your certificate does not contain FQDN
+ssl.endpoint.identification.algorithm=
+
+
 # The number of threads that the server uses for receiving requests from the network and sending responses to the network
 num.network.threads={{ kafka_num_network_threads }}
 

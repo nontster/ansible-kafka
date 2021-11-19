@@ -10,7 +10,7 @@ StandardOutput=null
 Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/bin/java/:/usr/local/openjdk-jdk/bin"
 Environment="KAFKA_HEAP_OPTS={{ kafka_java_heap }}"
 Environment="LOG_DIR={{ kafka_log_dir }}"
-Environment="KAFKA_OPTS=-javaagent:{{ jmx_exporter_dir }}/jmx_prometheus_javaagent-{{ jmx_exporter_version }}.jar={{ jmx_exporter_port }}:{{ jmx_exporter_dir }}/kafka-2_0_0.yml"
+Environment="KAFKA_OPTS=-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf -javaagent:{{ jmx_exporter_dir }}/jmx_prometheus_javaagent-{{ jmx_exporter_version }}.jar={{ jmx_exporter_port }}:{{ jmx_exporter_dir }}/kafka-2_0_0.yml"
 Environment="JMX_PORT={{ jmx_port }}"
 ExecStart={{ kafka_dir }}/bin/kafka-server-start.sh /etc/kafka/server.properties
 ExecStop={{ kafka_dir }}/bin/kafka-server-stop.sh
